@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jquery图片居中放大代码</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+$(function () {
+    getImages()
+	imgZoomInit()//模块初始化
+
+})
+
+
+/*
+* 图片放大展示
+
+*/
+function imgZoomInit(){
+	$('.piclist li.pic').append(function(){
+		ht = $(this).find('.in').html();
+		return "<div class='original'>"+ht+"</div>";
+	});
+	
+	$(".piclist li.pic .in img").each(function(i){
+		var img = $(this);
+		var realWidth ;//原始宽度
+		var realHeight ;//原始高度
+		var vs ;//图片宽高比
+		
+		realWidth = this.width;
+		realHeight = this.height;
+		vs = realWidth/realHeight;
+			
+		//缩略图比例230:142(约等于1.62)
+		if(vs>=1.62){//横图则固定高度
+			$(img).css("width","auto").css("height","142px").css("marginLeft",115-(71*realWidth/realHeight)+"px");
+		}
+		else{//竖图则固定宽度
+			$(img).css("width","230px").css("height","auto").css("marginTop",71-(115*realHeight/realWidth)+"px");
+		}
+		
+		//图片放大水平垂直居中显示
+		if(vs>=1){//横图或正方形
+			$(img).parent().parent().parent().find('.original img').height(260);
+			$(img).parent().parent().parent().find('.original img').width('auto');
+			$(img).parent().parent().parent().find('.original').css({
+				//此处需结合实际情况计算 左偏移：.original实际宽度的二分之一
+				marginLeft: function(){
+					return -(130*realWidth/realHeight)-6;
+				},
+				left:'50%'
+			})
+		}else{//竖图
+			$(img).parent().parent().parent().find('.original img').width(260);
+			$(img).parent().parent().parent().find('.original img').height('auto');
+			$(img).parent().parent().parent().find('.original').css({
+				//此处需结合实际情况计算 上偏移：.original实际高度的二分之一
+				marginTop: function(){
+					return -(130*realHeight/realWidth)-36;
+				},
+				top:'50%'
+			});
+			$(img).parent().parent().parent().find('.original b').css('display','block')
+		}		
+	});
+
+	
+	$('.piclist li.pic').hover(function(){
+			$(this).addClass('on');
+		},function(){
+			$(this).removeClass('on');	
+	})
+	
+	$(".piclist ul li:nth-child(4n)").addClass('r');
+}
+
+function getImages() {
+    $.post({
+        type: "Get",
+        url: "/loadImg",
+        success: function(data) {
+            alert(data.imagesMap);
+        }
+    });
+}
+
+</script>
+</head>
+
+<body>
+<!-- 要求img标签必须带上width和height属性 -->
+<div class="picbox">
+
+    <div class="picshow picshow01">
+        <div class="piclist">
+    
+            <ul>
+                <li class="pic" id="tes">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/shenzhen.jpg" alt="" width="458" height="330"/></div>
+                    <span><b><button>111</button></b></span>
+                </div>
+				
+                </li>
+				
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/cake.jpg" alt="" width="395" height="600" /></div>
+                    <span><b>图片展示2(image2)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/william.jpg" alt="" width="450" height="300" /></div>
+                    <span><b>图片展示3(image3)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/c_bannerimg.jpg" alt="" width="749" height="300" /></div>
+                    <span><b>图片展示4(image4)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/cat.jpg" alt="" width="347" height="320" /></div>
+                    <span><b>图片展示5(image5)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/smile.jpg" alt="" width="406" height="300" /></div>
+                    <span><b>图片展示6(image6)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/flower.jpg" alt="" width="450" height="614" /></div>
+                    <span><b>图片展示7(image7)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+                <li class="pic">
+                <div class="in">
+                    <div class="imgdiv"><img src="images/taylor.jpg" alt="" width="440" height="616" /></div>
+                    <span><b>图片展示8(image8)</b>图片描述图片描述图片描述</span>
+                </div>
+    
+                </li>
+        </ul>
+        </div>
+    
+    </div>
+       
+</div>
+
+</div>
+</body>
+</html>
