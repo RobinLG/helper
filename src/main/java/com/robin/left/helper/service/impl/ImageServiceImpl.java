@@ -1,7 +1,8 @@
-package com.robin.helper.service.impl;
+package com.robin.left.helper.service.impl;
 
-import com.robin.helper.common.utils.Base64;
-import com.robin.helper.service.ImageService;
+import com.robin.left.helper.common.utils.Base64;
+import com.robin.left.helper.service.ImageService;
+import com.robin.left.helper.common.utils.Consts;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +14,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.robin.helper.common.utils.ByteHelper.toByteArray;
-import static com.robin.helper.common.utils.Consts.DATE_FORMAT_1;
-import static com.robin.helper.common.utils.Msgs.FILE_NOT_EXIST;
+import static com.robin.left.helper.common.utils.ByteHelper.toByteArray;
+import static com.robin.left.helper.common.utils.Msgs.FILE_NOT_EXIST;
 
 /**
  * picture processing
@@ -67,7 +67,7 @@ public class ImageServiceImpl implements ImageService {
         if (!img.isEmpty()) {
             // this object contains the current date value
             Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_1);
+            SimpleDateFormat formatter = new SimpleDateFormat(Consts.DATE_FORMAT_1);
             String dateString = formatter.format(date);
             // Categorizes pictures by date
             File targetImg = new File(imagesPath + "\\" + dateString);

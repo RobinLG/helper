@@ -1,4 +1,4 @@
-package com.robin.helper.common.utils;
+package com.robin.left.helper.common.utils;
 
 /**
  * Defines generic fields

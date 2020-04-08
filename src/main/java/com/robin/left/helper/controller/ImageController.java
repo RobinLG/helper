@@ -1,6 +1,6 @@
-package com.robin.helper.controller;
+package com.robin.left.helper.controller;
 
-import com.robin.helper.service.ImageService;
+import com.robin.left.helper.service.ImageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,12 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
-import static com.robin.helper.common.utils.Msgs.FILE_TYPE;
+import static com.robin.left.helper.common.utils.Msgs.FILE_TYPE;
 
 @Log4j2
 @RestController
