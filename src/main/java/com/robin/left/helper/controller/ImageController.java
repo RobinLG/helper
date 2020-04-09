@@ -1,6 +1,8 @@
 package com.robin.left.helper.controller;
 
 import com.robin.left.helper.service.ImageService;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import sun.awt.image.PNGImageDecoder;
 
 import java.util.Map;
 
@@ -21,7 +24,7 @@ public class ImageController {
     private ImageService imageService;
 
     @PostMapping("/uploadImg")
-    public boolean uploadImg(@RequestParam("img")MultipartFile img) {
+    public Map<String, String> uploadImg(@RequestParam("file")MultipartFile img) {
 
         // Gets type of file
         String contentType = img.getContentType();
@@ -31,8 +34,8 @@ public class ImageController {
         System.out.println(originalFilename);
         // Gets suffix of the image
         String[] filename = originalFilename.split("\\.");
-        imageService.saveImage(img, filename[filename.length - 1]);
-        return true;
+        Map<String, String> result = imageService.saveImage(img, filename[filename.length - 1]);
+        return result;
     }
 
     @GetMapping("/loadImg")

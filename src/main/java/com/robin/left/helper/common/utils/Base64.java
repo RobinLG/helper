@@ -2,10 +2,9 @@ package com.robin.left.helper.common.utils;
 
 import sun.misc.BASE64Encoder;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * base64 util
@@ -21,18 +20,44 @@ public class Base64 {
      * @return
      */
     public static String getImgSt(String imgPath) {
-        byte[] date = null;
+        File f = new File(imgPath);
+        if (!f.exists()) {
+            try {
+                throw new FileNotFoundException(imgPath);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        FileChannel channel = null;
+        FileInputStream fs = null;
+        byte[] data = null;
 
         try {
-            InputStream in = new FileInputStream(imgPath);
-            date = new byte[in.available()];
-            in.read();
-            in.close();
+            fs = new FileInputStream(f);
+            channel = fs.getChannel();
+            ByteBuffer byteBuffer = ByteBuffer.allocate((int) channel.size());
+            while ((channel.read(byteBuffer)) > 0) {
+                // do nothing
+                // System.out.println("reading");
+            }
+            data = byteBuffer.array();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                channel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         BASE64Encoder base64Encoder = new BASE64Encoder();
-        return base64Encoder.encode(date);
+        return base64Encoder.encode(data);
     }
 }

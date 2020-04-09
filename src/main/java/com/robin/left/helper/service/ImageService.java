@@ -30,8 +30,9 @@ public interface ImageService {
      * Saving image to server
      * @param img
      * @param contentType
+     * @return result
      */
-    void saveImage(MultipartFile img, String contentType);
+    Map<String, String> saveImage(MultipartFile img, String contentType);
 
     /**
      * Modifying md5 of the pic which user selected.

@@ -7,6 +7,7 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
 $(function () {
+    var imagesNum = 0;
     getImages()
 	imgZoomInit()//模块初始化
 
@@ -77,11 +78,19 @@ function imgZoomInit(){
 }
 
 function getImages() {
-    $.post({
-        type: "Get",
+
+    $.ajax({
+        type: "get",
         url: "/loadImg",
         success: function(data) {
-            alert(data.imagesMap);
+            var itemStr = "";
+            imagesNum = Object.keys(data).length;
+            for (var i in data) {
+                itemStr += '<li class="pic" id="tes"><div class="in">'
+                itemStr += '<div class="imgdiv"><img id="' + i + '" src="' + data[i] + '" alt="" width="100%" height="100%"/></div>';
+                itemStr += '<span><b><button>111</button></b></span></div></li>'
+            }
+            $("#img_ul").html(itemStr);
         }
     });
 }
@@ -95,66 +104,9 @@ function getImages() {
 
     <div class="picshow picshow01">
         <div class="piclist">
-    
-            <ul>
-                <li class="pic" id="tes">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/shenzhen.jpg" alt="" width="458" height="330"/></div>
-                    <span><b><button>111</button></b></span>
-                </div>
-				
-                </li>
-				
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/cake.jpg" alt="" width="395" height="600" /></div>
-                    <span><b>图片展示2(image2)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/william.jpg" alt="" width="450" height="300" /></div>
-                    <span><b>图片展示3(image3)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/c_bannerimg.jpg" alt="" width="749" height="300" /></div>
-                    <span><b>图片展示4(image4)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/cat.jpg" alt="" width="347" height="320" /></div>
-                    <span><b>图片展示5(image5)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/smile.jpg" alt="" width="406" height="300" /></div>
-                    <span><b>图片展示6(image6)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/flower.jpg" alt="" width="450" height="614" /></div>
-                    <span><b>图片展示7(image7)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-                <li class="pic">
-                <div class="in">
-                    <div class="imgdiv"><img src="images/taylor.jpg" alt="" width="440" height="616" /></div>
-                    <span><b>图片展示8(image8)</b>图片描述图片描述图片描述</span>
-                </div>
-    
-                </li>
-        </ul>
+            <ul id="img_ul">
+
+            </ul>
         </div>
     
     </div>

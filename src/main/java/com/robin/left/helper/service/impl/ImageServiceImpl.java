@@ -15,7 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.robin.left.helper.common.utils.ByteHelper.toByteArray;
-import static com.robin.left.helper.common.utils.Msgs.FILE_NOT_EXIST;
+import static com.robin.left.helper.common.utils.Consts.*;
+import static com.robin.left.helper.common.utils.Msgs.*;
 
 /**
  * picture processing
@@ -42,7 +43,14 @@ public class ImageServiceImpl implements ImageService {
     public Map<String, String> loadImageFromServer(File file, Map<String, String> imagesMap) {
         if (file.exists()) {
             if (file.isFile()) {
-                imagesMap.put(file.getAbsolutePath(), Base64.getImgSt(file.getAbsolutePath()));
+                String[] type = file.getAbsolutePath().split("\\.");
+                // Prefix base64 according to the image type
+                if (type[1].equals(JPG)) {
+                    imagesMap.put(file.getAbsolutePath(), IMAGE_JPG + Base64.getImgSt(file.getAbsolutePath()));
+                } else if (type[1].equals(PNG)) {
+                    imagesMap.put(file.getAbsolutePath(), IMAGE_PNG + Base64.getImgSt(file.getAbsolutePath()));
+                }
+
             } else {
                 // When 'file' a folder, the following method
                 File[] fileList = file.listFiles();
@@ -62,7 +70,9 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void saveImage(MultipartFile img, String contentType) {
+    public Map<String, String> saveImage(MultipartFile img, String contentType) {
+        String imgUrl = "";
+        Map<String, String> uploadResult = new HashMap<>();
         // Determines if the file is empty
         if (!img.isEmpty()) {
             // this object contains the current date value
@@ -76,17 +86,25 @@ public class ImageServiceImpl implements ImageService {
                 // Create folders in cascade
                 targetImg.mkdirs();
             }
+            imgUrl = imagesPath + "\\" + dateString + "\\" + System.currentTimeMillis() + "." + contentType;
             try {
-                FileOutputStream outputStream = new FileOutputStream(imagesPath + "\\" + dateString + "\\" + System.currentTimeMillis() + "." + contentType);
+                FileOutputStream outputStream = new FileOutputStream(imgUrl);
                 outputStream.write(img.getBytes());
                 outputStream.flush();
                 outputStream.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                uploadResult.put("state", "0");
+                uploadResult.put("errmsg", FILE_IO_ERR);
             } catch (IOException e) {
                 e.printStackTrace();
+                uploadResult.put("state", "0");
+                uploadResult.put("errmsg", FILE_NOT_FOUND);
             }
         }
+        uploadResult.put("state", "1");
+        uploadResult.put("path", imgUrl);
+        return uploadResult;
     }
 
     @Override
