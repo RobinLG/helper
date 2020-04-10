@@ -1,8 +1,6 @@
 package com.robin.left.helper.controller;
 
 import com.robin.left.helper.service.ImageService;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import sun.awt.image.PNGImageDecoder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
+import static com.robin.left.helper.common.utils.Consts.JPG;
+import static com.robin.left.helper.common.utils.Consts.PNG;
 import static com.robin.left.helper.common.utils.Msgs.FILE_TYPE;
 
 @Log4j2
@@ -45,7 +49,30 @@ public class ImageController {
     }
 
     @GetMapping("/getImgMdFive")
-    public String getImgMdFive(@RequestParam("filePath")String filePath) {
-       return imageService.modifyImageMdFive(filePath);
+    public String getImgMdFive(@RequestParam("filePath")String filePath, HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("filePath:" + filePath);
+        File file = new File(filePath);
+        if (file.exists()) {
+            // setting download but not open
+            response.setContentType("application/force-download");
+            // Prefix base64 according to the image type
+            String[] type = file.getAbsolutePath().split("\\.");
+            String fileName = "";
+            if (type[1].equals(JPG)) {
+                fileName = System.currentTimeMillis() + JPG;
+            } else if (type[1].equals(PNG)) {
+                fileName = System.currentTimeMillis() + PNG;
+            }
+            response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+
+            byte[] modified = imageService.modifyImageMdFive(filePath);
+            try {
+                OutputStream os = response.getOutputStream();
+                os.write(modified);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

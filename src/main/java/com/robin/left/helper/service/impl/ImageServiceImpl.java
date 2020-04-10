@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
 
@@ -29,12 +30,17 @@ public class ImageServiceImpl implements ImageService {
 
     @Value("${images.path}")
     private String imagesPath;
+    @Value("${images.pathSplit}")
+    private String pathSplit;
 
     @Override
     public Map<String, String> loadImage() {
         // save base64 of image in Map
         Map<String, String> imagesMap = new HashMap<>();
-        File file = new File(imagesPath);
+        System.out.println(Thread.currentThread().getContextClassLoader().
+                getResource("").getPath() + imagesPath);
+        File file = new File(Thread.currentThread().getContextClassLoader().
+                getResource("").getPath() + imagesPath);
         Map<String, String> base64 = loadImageFromServer(file, imagesMap);
         return base64;
     }
@@ -43,12 +49,14 @@ public class ImageServiceImpl implements ImageService {
     public Map<String, String> loadImageFromServer(File file, Map<String, String> imagesMap) {
         if (file.exists()) {
             if (file.isFile()) {
+                System.out.println(file.getAbsolutePath());
                 String[] type = file.getAbsolutePath().split("\\.");
+                String[] path = file.getAbsolutePath().split(pathSplit);
                 // Prefix base64 according to the image type
                 if (type[1].equals(JPG)) {
-                    imagesMap.put(file.getAbsolutePath(), IMAGE_JPG + Base64.getImgSt(file.getAbsolutePath()));
+                    imagesMap.put(path[1], IMAGE_JPG + Base64.getImgSt(file.getAbsolutePath()));
                 } else if (type[1].equals(PNG)) {
-                    imagesMap.put(file.getAbsolutePath(), IMAGE_PNG + Base64.getImgSt(file.getAbsolutePath()));
+                    imagesMap.put(path[1], IMAGE_PNG + Base64.getImgSt(file.getAbsolutePath()));
                 }
 
             } else {
@@ -80,13 +88,16 @@ public class ImageServiceImpl implements ImageService {
             SimpleDateFormat formatter = new SimpleDateFormat(Consts.DATE_FORMAT_1);
             String dateString = formatter.format(date);
             // Categorizes pictures by date
-            File targetImg = new File(imagesPath + "\\" + dateString);
+            File targetImg = new File(Thread.currentThread().getContextClassLoader().getResource("")
+                    .getPath() + imagesPath + dateString);
             // Determines if the folder is empty
             if (!targetImg.exists()) {
                 // Create folders in cascade
                 targetImg.mkdirs();
             }
-            imgUrl = imagesPath + "\\" + dateString + "\\" + System.currentTimeMillis() + "." + contentType;
+
+            imgUrl = Thread.currentThread().getContextClassLoader().getResource("")
+                    .getPath() + imagesPath + dateString + "/" + System.currentTimeMillis() + "." + contentType;
             try {
                 FileOutputStream outputStream = new FileOutputStream(imgUrl);
                 outputStream.write(img.getBytes());
@@ -108,7 +119,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String modifyImageMdFive(String filePath) {
+    public byte[] modifyImageMdFive(String filePath) {
         byte[] data = new byte[0];
         try {
             FileInputStream in = new FileInputStream(filePath);
@@ -132,8 +143,7 @@ public class ImageServiceImpl implements ImageService {
         System.out.println("pic1 md5:" + DigestUtils.md5Hex(data));
         System.out.println("pic2 md5:" + DigestUtils.md5Hex(data2));
 
-        BASE64Encoder base64Encoder = new BASE64Encoder();
-        return base64Encoder.encode(data2);
+        return data2;
     }
 
 

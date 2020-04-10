@@ -1,3 +1,4 @@
 #images configuration
 images:
-  path: A:\\images
+  path: static/uploadImages/
+  pathSplit: uploadImages\\

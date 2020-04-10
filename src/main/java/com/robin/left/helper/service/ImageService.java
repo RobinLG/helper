@@ -40,5 +40,5 @@ public interface ImageService {
      * @param filePath
      * @return returning the result
      */
-    String modifyImageMdFive(String filePath);
+    byte[] modifyImageMdFive(String filePath);
 }
