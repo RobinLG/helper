@@ -1,15 +1,15 @@
 package com.robin.left.helper.service.impl;
 
-import com.robin.left.helper.common.utils.Base64;
+import com.robin.left.helper.common.utils.Base64Util;
 import com.robin.left.helper.service.ImageService;
 import com.robin.left.helper.common.utils.Consts;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
-import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -32,7 +32,6 @@ public class ImageServiceImpl implements ImageService {
     private String imagesPath;
     @Value("${images.pathSplit}")
     private String pathSplit;
-    private BASE64Encoder base64Encoder = new BASE64Encoder();
 
     @Override
     public Map<String, String> loadImage() {
@@ -54,9 +53,9 @@ public class ImageServiceImpl implements ImageService {
                 // Prefix base64 according to the image type,
                 // and key, because http can not transform '/' in URL
                 if (type[1].equals(JPG)) {
-                    imagesMap.put(base64Encoder.encode(path[1].getBytes()), IMAGE_JPG + Base64.getImgSt(file.getAbsolutePath()));
+                    imagesMap.put(Base64.encodeBase64String(path[1].getBytes()), IMAGE_JPG + Base64Util.getImgSt(file.getAbsolutePath()));
                 } else if (type[1].equals(PNG)) {
-                    imagesMap.put(base64Encoder.encode(path[1].getBytes()), IMAGE_PNG + Base64.getImgSt(file.getAbsolutePath()));
+                    imagesMap.put(Base64.encodeBase64String(path[1].getBytes()), IMAGE_PNG + Base64Util.getImgSt(file.getAbsolutePath()));
                 }
 
             } else {

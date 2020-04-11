@@ -1,17 +1,16 @@
 package com.robin.left.helper.common.utils;
 
-import sun.misc.BASE64Encoder;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import org.apache.commons.codec.binary.Base64;
 /**
  * base64 util
  * @author Robin
  * @date 2020/4/8
  */
-public class Base64 {
+public class Base64Util {
 
     /**
      * transform image to byte[],
@@ -57,7 +56,6 @@ public class Base64 {
             }
         }
 
-        BASE64Encoder base64Encoder = new BASE64Encoder();
-        return base64Encoder.encode(data);
+        return Base64.encodeBase64String(data);
     }
 }
