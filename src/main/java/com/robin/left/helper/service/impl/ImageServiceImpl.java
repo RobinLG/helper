@@ -32,15 +32,14 @@ public class ImageServiceImpl implements ImageService {
     private String imagesPath;
     @Value("${images.pathSplit}")
     private String pathSplit;
+    private BASE64Encoder base64Encoder = new BASE64Encoder();
 
     @Override
     public Map<String, String> loadImage() {
         // save base64 of image in Map
         Map<String, String> imagesMap = new HashMap<>();
-        System.out.println(Thread.currentThread().getContextClassLoader().
-                getResource("").getPath() + imagesPath);
-        File file = new File(Thread.currentThread().getContextClassLoader().
-                getResource("").getPath() + imagesPath);
+        log.debug("images:" + imagesPath);
+        File file = new File(imagesPath);
         Map<String, String> base64 = loadImageFromServer(file, imagesMap);
         return base64;
     }
@@ -49,21 +48,22 @@ public class ImageServiceImpl implements ImageService {
     public Map<String, String> loadImageFromServer(File file, Map<String, String> imagesMap) {
         if (file.exists()) {
             if (file.isFile()) {
-                System.out.println(file.getAbsolutePath());
+                log.debug(file.getAbsolutePath());
                 String[] type = file.getAbsolutePath().split("\\.");
                 String[] path = file.getAbsolutePath().split(pathSplit);
-                // Prefix base64 according to the image type
+                // Prefix base64 according to the image type,
+                // and key, because http can not transform '/' in URL
                 if (type[1].equals(JPG)) {
-                    imagesMap.put(path[1], IMAGE_JPG + Base64.getImgSt(file.getAbsolutePath()));
+                    imagesMap.put(base64Encoder.encode(path[1].getBytes()), IMAGE_JPG + Base64.getImgSt(file.getAbsolutePath()));
                 } else if (type[1].equals(PNG)) {
-                    imagesMap.put(path[1], IMAGE_PNG + Base64.getImgSt(file.getAbsolutePath()));
+                    imagesMap.put(base64Encoder.encode(path[1].getBytes()), IMAGE_PNG + Base64.getImgSt(file.getAbsolutePath()));
                 }
 
             } else {
                 // When 'file' a folder, the following method
                 File[] fileList = file.listFiles();
                 if (fileList.length == 0) {
-                    System.out.println(file.getAbsolutePath() + "is null!");
+                    log.debug(file.getAbsolutePath() + "is null!");
                 } else {
                     for (int i = 0; i < fileList.length; i++) {
                         // recursive function, when 'file' is not file
@@ -72,7 +72,7 @@ public class ImageServiceImpl implements ImageService {
                 }
             }
         } else {
-            System.out.println(FILE_NOT_EXIST);
+            log.debug(FILE_NOT_EXIST);
         }
         return imagesMap;
     }
@@ -88,16 +88,14 @@ public class ImageServiceImpl implements ImageService {
             SimpleDateFormat formatter = new SimpleDateFormat(Consts.DATE_FORMAT_1);
             String dateString = formatter.format(date);
             // Categorizes pictures by date
-            File targetImg = new File(Thread.currentThread().getContextClassLoader().getResource("")
-                    .getPath() + imagesPath + dateString);
+            File targetImg = new File(imagesPath + dateString);
             // Determines if the folder is empty
             if (!targetImg.exists()) {
                 // Create folders in cascade
                 targetImg.mkdirs();
             }
 
-            imgUrl = Thread.currentThread().getContextClassLoader().getResource("")
-                    .getPath() + imagesPath + dateString + "/" + System.currentTimeMillis() + "." + contentType;
+            imgUrl = imagesPath + dateString + "/" + System.currentTimeMillis() + "." + contentType;
             try {
                 FileOutputStream outputStream = new FileOutputStream(imgUrl);
                 outputStream.write(img.getBytes());
@@ -139,9 +137,9 @@ public class ImageServiceImpl implements ImageService {
         Random r = new Random();
         data2[data.length] = (byte)r.nextInt(101);
         data2[data.length + 1] = (byte)r.nextInt(101);
-        System.out.println("pic bytes:" + Arrays.toString(data2));
-        System.out.println("pic1 md5:" + DigestUtils.md5Hex(data));
-        System.out.println("pic2 md5:" + DigestUtils.md5Hex(data2));
+        log.debug("pic bytes:" + Arrays.toString(data2));
+        log.debug("pic1 md5:" + DigestUtils.md5Hex(data));
+        log.debug("pic2 md5:" + DigestUtils.md5Hex(data2));
 
         return data2;
     }

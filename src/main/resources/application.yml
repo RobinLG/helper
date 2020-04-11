@@ -1,4 +1,8 @@
 #images configuration
 images:
-  path: static/uploadImages/
-  pathSplit: uploadImages\\
+  path: A:\\images\\
+  pathSplit: images\\
+
+#log4j2.xml
+logging:
+  config: classpath:log4j2.xml
