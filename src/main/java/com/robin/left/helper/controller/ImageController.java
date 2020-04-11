@@ -50,7 +50,6 @@ public class ImageController {
 
     @GetMapping("/loadImg")
     public Map<String, String> loadImg() {
-        log.debug("*******************");
         Map<String, String> imagesMap = imageService.loadImage();
         return imagesMap;
     }
