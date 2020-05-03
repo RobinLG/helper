@@ -1,4 +1,4 @@
-package com.robin.left.helper.common.utils;
+package com.robin.life.helper.common.utils;
 
 /**
  * common message

@@ -1,6 +1,6 @@
-package com.robin.left.helper.controller;
+package com.robin.life.helper.controller;
 
-import com.robin.left.helper.service.ImageService;
+import com.robin.life.helper.service.ImageService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
-import static com.robin.left.helper.common.utils.Consts.JPG;
-import static com.robin.left.helper.common.utils.Consts.PNG;
-import static com.robin.left.helper.common.utils.Msgs.FILE_TYPE;
+import static com.robin.life.helper.common.utils.Consts.JPG;
+import static com.robin.life.helper.common.utils.Consts.PNG;
+import static com.robin.life.helper.common.utils.Msgs.FILE_TYPE;
 
 @Log4j2
 @RestController

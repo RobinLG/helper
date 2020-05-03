@@ -1,23 +1,22 @@
-package com.robin.left.helper.service.impl;
+package com.robin.life.helper.service.impl;
 
-import com.robin.left.helper.common.utils.Base64Util;
-import com.robin.left.helper.service.ImageService;
-import com.robin.left.helper.common.utils.Consts;
+import com.robin.life.helper.common.utils.Base64Util;
+import com.robin.life.helper.service.ImageService;
+import com.robin.life.helper.common.utils.Consts;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.robin.left.helper.common.utils.ByteHelper.toByteArray;
-import static com.robin.left.helper.common.utils.Consts.*;
-import static com.robin.left.helper.common.utils.Msgs.*;
+import static com.robin.life.helper.common.utils.ByteHelper.toByteArray;
+import static com.robin.life.helper.common.utils.Consts.*;
+import static com.robin.life.helper.common.utils.Msgs.*;
 
 /**
  * picture processing

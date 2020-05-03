@@ -1,4 +1,4 @@
-package com.robin.left.helper;
+package com.robin.life.helper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

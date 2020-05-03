@@ -3,3 +3,24 @@ images:
   path: A:\\images\\
   pathSplit: images\\
 
+#databse configuration
+spring:
+  datasource:
+    dbcp2:
+      url: jdbc:mysql://localhost:3306/life_helper?serverTimezone=GMT%2B8&characterEncoding=utf-8
+      username: root
+      password: P@ssw0rd
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 5
+      min-idle: 2
+      max-total: 20
+      max-wait-millis: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 30000
+#      validation-query: SELECT 1 FROM t_picture
+      test-while-idle: true
+      test-on-borrow: false
+    type: org.apache.commons.dbcp2.BasicDataSource
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
