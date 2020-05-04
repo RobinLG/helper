@@ -7,7 +7,7 @@ import java.io.*;
  * @author Robin
  * @date 2020/4/8
  */
-public class ByteHelper {
+public class ByteUtil {
 
     /**
      * transform inputStream to byte[]

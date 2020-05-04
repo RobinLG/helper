@@ -1,20 +1,26 @@
 package com.robin.life.helper.service.impl;
 
 import com.robin.life.helper.common.utils.Base64Util;
+import com.robin.life.helper.dao.ImageDao;
 import com.robin.life.helper.service.ImageService;
 import com.robin.life.helper.common.utils.Consts;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.robin.life.helper.common.utils.ByteHelper.toByteArray;
+import static com.robin.life.helper.common.utils.ByteUtil.toByteArray;
 import static com.robin.life.helper.common.utils.Consts.*;
 import static com.robin.life.helper.common.utils.Msgs.*;
 
@@ -31,6 +37,8 @@ public class ImageServiceImpl implements ImageService {
     private String imagesPath;
     @Value("${images.pathSplit}")
     private String pathSplit;
+    @Autowired
+    private ImageDao imageDao;
 
     @Override
     public Map<String, String> loadImage() {
@@ -76,7 +84,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Map<String, String> saveImage(MultipartFile img, String contentType) {
+    public Map<String, String> saveImage2Server(MultipartFile img, String contentType) {
         String imgUrl = "";
         Map<String, String> uploadResult = new HashMap<>();
         // Determines if the file is empty
@@ -112,6 +120,50 @@ public class ImageServiceImpl implements ImageService {
         uploadResult.put("state", "1");
         uploadResult.put("path", imgUrl);
         return uploadResult;
+    }
+
+    @Override
+    public Map<String, Object> saveImage2Db(MultipartFile img, String contentType) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        InputStream inputStream = null;
+        Map<String, Object> imageMap = new HashMap<>();
+        // bytes of img
+        try {
+            inputStream = img.getInputStream();
+            // changes all of images's type to .jpg,
+            // because using plugin(thumbnail) to change .png, the size of images will up.
+            if (!img.isEmpty() && contentType.equals(IMAGE_PNG)) {
+                // read image file
+                BufferedImage bufferedImage = ImageIO.read(img.getInputStream());
+                // create a blank, RGB, same width and height, and a white
+                // background
+                BufferedImage newBufferedImage = new BufferedImage(
+                        bufferedImage.getWidth(), bufferedImage.getHeight(),
+                        BufferedImage.TYPE_INT_RGB);
+                // TYPE_INT_RGB:creating a RBG image，24bit depth，changing 32bitmap to 24 bit successfully
+                newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0,
+                        Color.WHITE, null);
+                ImageIO.write(newBufferedImage, "jpg", byteArrayOutputStream);
+                inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+                inputStream.close();
+            }
+
+            // cut the size of image
+            BufferedImage bufferedThumbnailImage = Thumbnails.of(inputStream)
+            .scale(1f)
+            .outputQuality(0.1f).asBufferedImage();
+            ImageIO.write(bufferedThumbnailImage, "jpg", byteArrayOutputStream);
+
+            imageMap.put("thumbnail", byteArrayOutputStream.toByteArray());
+            imageMap.put("picture", img.getBytes());
+            imageMap.put("time", new Date());
+            imageDao.insertImage(imageMap);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imageMap;
     }
 
     @Override

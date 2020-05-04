@@ -32,7 +32,7 @@ public class ImageController {
     private String imagesPath;
 
     @PostMapping("/uploadImg")
-    public Map<String, String> uploadImg(@RequestParam("file")MultipartFile img) {
+    public Map<String, Object> uploadImg(@RequestParam("file")MultipartFile img) {
         // Gets type of file
         String contentType = img.getContentType();
         log.debug(FILE_TYPE + contentType);
@@ -41,7 +41,7 @@ public class ImageController {
         log.debug(originalFilename);
         // Gets suffix of the image
         String[] filename = originalFilename.split("\\.");
-        Map<String, String> result = imageService.saveImage(img, filename[filename.length - 1]);
+        Map<String, Object> result = imageService.saveImage2Db(img, filename[filename.length - 1]);
         return result;
     }
 
