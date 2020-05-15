@@ -11,6 +11,7 @@ LifeHelper的需求是从身边的朋友或自己收集而来，以B/S结构部�
 * 使用Spring boot搭建项目；
 * 集成Mybaits；
 * [图片压缩](https://github.com/coobird/thumbnailator);
+* 前端使用ElementUI，页面来源[这里](https://github.com/TyCoding/ssm/tree/master/src/main/webapp)，小改HTML和JS。
 
 ## 模块
 ### ImageSerive - 已实现功能
