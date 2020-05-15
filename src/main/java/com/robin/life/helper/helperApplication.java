@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource(locations={"classpath:spring-common.xml"})
+@ImportResource(locations={"classpath:spring/spring-common.xml"})
 public class helperApplication {
 
 	public static void main(String[] args) {

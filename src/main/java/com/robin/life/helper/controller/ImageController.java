@@ -32,7 +32,7 @@ public class ImageController {
     private String imagesPath;
 
     @PostMapping("/uploadImg")
-    public Map<String, Object> uploadImg(@RequestParam("file")MultipartFile img) {
+    public Map<String, Object> uploadImg(@RequestParam("img")MultipartFile img) {
         // Gets type of file
         String contentType = img.getContentType();
         log.debug(FILE_TYPE + contentType);
